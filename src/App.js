@@ -98,6 +98,9 @@ function App() {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
+      <div id="attribution">
+        Data provided by <a href="https://github.com/CryptoKass/ncov-data" target="_blank">CryptoKass</a>
+      </div>
     </Fragment>
   );
 }
