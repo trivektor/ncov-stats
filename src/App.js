@@ -55,32 +55,40 @@ function App() {
                   .domain([minCases, maxCases])
                   .range(["#ffa5b7", "#ff1e4b"]);
 
-                return geographies.map((geo) => {
-                  const countryName = nameMappings[geo.properties.NAME] || geo.properties.NAME;
-                  const countryIndex = countryIndicies[countryName];
-                  const cases = worldLatestData.cases[countryIndex];
-                  const props = {
-                    key: geo.rsmKey,
-                    geography: geo,
-                    fill: cases ? colorScale(cases) : "#F5F4F6",
-                  };
-                  const centroid = geoCentroid(geo);
+                return (
+                  <Fragment>
+                    {
+                      geographies.map((geo) => {
+                        const countryName = nameMappings[geo.properties.NAME] || geo.properties.NAME;
+                        const countryIndex = countryIndicies[countryName];
+                        const cases = worldLatestData.cases[countryIndex];
+                        const props = {
+                          key: geo.rsmKey,
+                          geography: geo,
+                          fill: cases ? colorScale(cases) : "#F5F4F6",
+                        };
 
-                  return (
-                    <Fragment>
-                      <Geography {...props} />
-                      {
-                        cases && (
+                        return <Geography {...props} />;
+                      })
+                    }
+                    {
+                      geographies.map((geo) => {
+                        const countryName = nameMappings[geo.properties.NAME] || geo.properties.NAME;
+                        const countryIndex = countryIndicies[countryName];
+                        const cases = worldLatestData.cases[countryIndex];
+                        const centroid = geoCentroid(geo);
+
+                        return cases && (
                           <Marker coordinates={centroid}>
-                             <text y="2" fontSize={7} textAnchor="middle">
-                               {geo.properties.NAME}
+                             <text x="-15" y="2" fontSize={8}>
+                               {geo.properties.NAME} ({cases.toLocaleString()})
                              </text>
                            </Marker>
                         )
-                      }
-                    </Fragment>
-                  );
-                });
+                      })
+                    }
+                  </Fragment>
+                );
               }
             }
           </Geographies>
