@@ -5,9 +5,13 @@ import {
   Geographies,
   Geography,
   Sphere,
-  Graticule
+  Graticule,
+  ZoomableGroup,
+  Marker,
+  Annotation,
 } from "react-simple-maps";
 import {min, max} from "lodash-es";
+import {geoCentroid} from "d3-geo";
 
 import {useRemoteData} from "./hooks";
 
@@ -38,33 +42,49 @@ function App() {
         Corona Virus Worldwide Cases Map
       </header>
       <ComposableMap projection="geoMercator">
-        <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
-        <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
-        <Geographies geography={geoUrl}>
-          {
-            ({geographies}) => {
-              const casesCount = Object.values(worldLatestData.cases);
-              const maxCases = max(casesCount);
-              const minCases = min(casesCount);
-              const colorScale = scaleLinear()
-                .domain([minCases, maxCases])
-                .range(["#ffc3a0", "#ff5d00"]);
+        <ZoomableGroup zoom={1}>
+          <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
+          <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
+          <Geographies geography={geoUrl}>
+            {
+              ({geographies}) => {
+                const casesCount = Object.values(worldLatestData.cases);
+                const maxCases = max(casesCount);
+                const minCases = min(casesCount);
+                const colorScale = scaleLinear()
+                  .domain([minCases, maxCases])
+                  .range(["#ffa5b7", "#ff1e4b"]);
 
-              return geographies.map((geo) => {
-                const countryName = nameMappings[geo.properties.NAME] || geo.properties.NAME;
-                const countryIndex = countryIndicies[countryName];
-                const cases = worldLatestData.cases[countryIndex];
-                const props = {
-                  key: geo.rsmKey,
-                  geography: geo,
-                  fill: cases ? colorScale(cases) : "#F5F4F6",
-                };
+                return geographies.map((geo) => {
+                  const countryName = nameMappings[geo.properties.NAME] || geo.properties.NAME;
+                  const countryIndex = countryIndicies[countryName];
+                  const cases = worldLatestData.cases[countryIndex];
+                  const props = {
+                    key: geo.rsmKey,
+                    geography: geo,
+                    fill: cases ? colorScale(cases) : "#F5F4F6",
+                  };
+                  const centroid = geoCentroid(geo);
 
-                return <Geography {...props} />;
-              });
+                  return (
+                    <Fragment>
+                      <Geography {...props} />
+                      {
+                        cases && (
+                          <Marker coordinates={centroid}>
+                             <text y="2" fontSize={7} textAnchor="middle">
+                               {geo.properties.NAME}
+                             </text>
+                           </Marker>
+                        )
+                      }
+                    </Fragment>
+                  );
+                });
+              }
             }
-          }
-        </Geographies>
+          </Geographies>
+        </ZoomableGroup>
       </ComposableMap>
     </Fragment>
   );
