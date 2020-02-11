@@ -8,7 +8,6 @@ import {
   Graticule,
   ZoomableGroup,
   Marker,
-  Annotation,
 } from "react-simple-maps";
 import {min, max} from "lodash-es";
 import {geoCentroid} from "d3-geo";
@@ -83,7 +82,7 @@ function App() {
                         const centroid = geoCentroid(geo);
 
                         return cases && (
-                          <Marker coordinates={centroid}>
+                          <Marker key={geo.rsmKey} coordinates={centroid}>
                              <text x="-15" y="2" fontSize={8}>
                                {geo.properties.NAME} ({cases.toLocaleString()})
                              </text>
@@ -99,7 +98,14 @@ function App() {
         </ZoomableGroup>
       </ComposableMap>
       <div id="attribution">
-        Data by <a href="https://github.com/CryptoKass/ncov-data" target="_blank">CryptoKass</a>
+        Data by
+        {" "}
+        <a
+          href="https://github.com/CryptoKass/ncov-data"
+          rel="noopener noreferrer"
+          target="_blank">
+          CryptoKass
+        </a>
       </div>
     </Fragment>
   );
