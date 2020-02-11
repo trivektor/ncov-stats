@@ -13,7 +13,7 @@ import {
 import {min, max} from "lodash-es";
 import {geoCentroid} from "d3-geo";
 
-import {useRemoteData} from "./hooks";
+import {useRemoteData, useWindowDimensions} from "./hooks";
 
 const nameMappings = {
   "United States of America": "United States",
@@ -28,6 +28,7 @@ function App() {
     data: worldLatestData,
     error: worldLatestDataError,
   } = useRemoteData("https://raw.githubusercontent.com/CryptoKass/ncov-data/master/world.latest.bno.json");
+  const {width, height} = useWindowDimensions();
 
   if (worldLatestDataLoading) return "Loading...";
 
@@ -41,8 +42,11 @@ function App() {
       <header>
         Corona Virus Worldwide Cases Map
       </header>
-      <ComposableMap projection="geoMercator">
-        <ZoomableGroup zoom={1}>
+      <ComposableMap
+        projection="geoMercator"
+        width={width}
+        height={height}>
+        <ZoomableGroup center={[100, 40]} zoom={2}>
           <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
           <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
           <Geographies geography={geoUrl}>

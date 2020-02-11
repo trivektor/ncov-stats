@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  padding: 40px 0;
+  padding: 0;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -10,14 +10,17 @@ body {
 }
 
 header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   padding: 10px;
   background: #ef105e;
   color: #fff;
-  text-transform: uppercase;
   font-size: 1.2em;
   text-align: center;
+}
+
+svg {
+  user-select: none;
 }
