@@ -35,7 +35,7 @@ function App() {
   return (
     <Fragment>
       <header>
-        Corona Virus World Wide Cases Map
+        Corona Virus Worldwide Cases Map
       </header>
       <ComposableMap projection="geoMercator">
         <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
